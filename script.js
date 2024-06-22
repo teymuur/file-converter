@@ -82,9 +82,9 @@ async function convertPdfToDocx() {
 
         for (const page of pdfDoc.getPages()) {
             const { width, height } = page.getSize();
-            const pageImage = await page.embedPNG(await page.renderToBuffer());
+            const pageImage = await page.renderToImage();
             const imageSection = new docx.ImageRun({
-                data: pageImage,
+                data: pageImage.toDataURL(),
                 transformation: { width, height },
             });
 
@@ -101,7 +101,36 @@ async function convertPdfToDocx() {
     }
 }
 
-function convertDocxToPdf() {
-    // To be implemented
-    alert('DOCX to PDF conversion is not implemented in this example.');
+async function convertDocxToPdf() {
+    const fileInput = document.getElementById('docxInput');
+
+    if (fileInput.files.length === 0) {
+        alert('Please select a file first!');
+        return;
+    }
+
+    const file = fileInput.files[0];
+    if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        const arrayBuffer = await file.arrayBuffer();
+        const doc = await docx.Document.load(arrayBuffer);
+        const pdfDoc = await PDFLib.PDFDocument.create();
+
+        for (const section of doc.sections) {
+            for (const child of section.children) {
+                if (child instanceof docx.Paragraph) {
+                    const page = pdfDoc.addPage();
+                    page.drawText(child.text);
+                } else if (child instanceof docx.ImageRun) {
+                    const page = pdfDoc.addPage([child.width, child.height]);
+                    const pngImage = await pdfDoc.embedPng(child.data);
+                    page.drawImage(pngImage, { x: 0, y: 0, width: child.width, height: child.height });
+                }
+            }
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        saveAs(new Blob([pdfBytes], { type: 'application/pdf' }), file.name.replace(/\.[^/.]+$/, ".pdf"));
+    } else {
+        alert('Please select a DOCX file for conversion to PDF.');
+    }
 }

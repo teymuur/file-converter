@@ -26,10 +26,24 @@ h1 {
 
 button {
     margin: 10px;
+    background-color:rgb(98, 155, 212);
+    color:#f0f0f0;
     padding: 10px 20px;
     font-size: 16px;
+    border-radius: 10px;
+    border: none;
 }
 
 .form {
     margin-top: 20px;
 }
+
+input[type="file"]::file-selector-button {
+    margin: 6px;
+    background-color:rgb(98, 212, 187);
+    color:#f0f0f0;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+  }
