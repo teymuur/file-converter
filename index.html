@@ -18,29 +18,28 @@
 
         <div id="pngToJpgForm" class="form" style="display: none;">
             <input type="file" id="pngInput" accept=".png">
-            <button onclick="convertPngToJpg()">Convert to JPG</button>
+            <button onclick="uploadAndConvert('pngInput', 'jpg')">Convert to JPG</button>
         </div>
 
         <div id="jpgToPngForm" class="form" style="display: none;">
             <input type="file" id="jpgInput" accept=".jpg, .jpeg">
-            <button onclick="convertJpgToPng()">Convert to PNG</button>
+            <button onclick="uploadAndConvert('jpgInput', 'png')">Convert to PNG</button>
         </div>
 
         <div id="pdfToDocxForm" class="form" style="display: none;">
             <input type="file" id="pdfInput" accept=".pdf">
-            <button onclick="convertPdfToDocx()">Convert to DOCX</button>
+            <button onclick="uploadAndConvert('pdfInput', 'docx')">Convert to DOCX</button>
         </div>
 
         <div id="docxToPdfForm" class="form" style="display: none;">
             <input type="file" id="docxInput" accept=".docx">
-            <button onclick="convertDocxToPdf()">Convert to PDF</button>
+            <button onclick="uploadAndConvert('docxInput', 'pdf')">Convert to PDF</button>
         </div>
 
         <a id="downloadLink" style="display: none;">Download</a>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.0.1/docx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

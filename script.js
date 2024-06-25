@@ -6,68 +6,8 @@ function showForm(formId) {
     document.getElementById(formId).style.display = 'block';
 }
 
-function convertPngToJpg() {
-    const fileInput = document.getElementById('pngInput');
-    
-    if (fileInput.files.length === 0) {
-        alert('Please select a file first!');
-        return;
-    }
-
-    const file = fileInput.files[0];
-    if (file.type === 'image/png') {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-
-        img.onload = function () {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-
-            canvas.toBlob(function (blob) {
-                saveAs(blob, file.name.replace(/\.[^/.]+$/, ".jpg"));
-            }, 'image/jpeg');
-        };
-
-        img.src = URL.createObjectURL(file);
-    } else {
-        alert('Please select a PNG file for conversion to JPG.');
-    }
-}
-
-function convertJpgToPng() {
-    const fileInput = document.getElementById('jpgInput');
-    
-    if (fileInput.files.length === 0) {
-        alert('Please select a file first!');
-        return;
-    }
-
-    const file = fileInput.files[0];
-    if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-
-        img.onload = function () {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-
-            canvas.toBlob(function (blob) {
-                saveAs(blob, file.name.replace(/\.[^/.]+$/, ".png"));
-            }, 'image/png');
-        };
-
-        img.src = URL.createObjectURL(file);
-    } else {
-        alert('Please select a JPEG file for conversion to PNG.');
-    }
-}
-
-async function convertPdfToDocx() {
-    const fileInput = document.getElementById('pdfInput');
+function uploadAndConvert(inputId, targetFormat) {
+    const fileInput = document.getElementById(inputId);
 
     if (fileInput.files.length === 0) {
         alert('Please select a file first!');
@@ -75,62 +15,29 @@ async function convertPdfToDocx() {
     }
 
     const file = fileInput.files[0];
-    if (file.type === 'application/pdf') {
-        const pdfBytes = await file.arrayBuffer();
-        const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-        const doc = new docx.Document();
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('targetFormat', targetFormat);
 
-        for (const page of pdfDoc.getPages()) {
-            const { width, height } = page.getSize();
-            const pageImage = await page.renderToImage();
-            const imageSection = new docx.ImageRun({
-                data: pageImage.toDataURL(),
-                transformation: { width, height },
-            });
-
-            doc.addSection({
-                children: [new docx.Paragraph(imageSection)],
-            });
+    axios.post('convert.php', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
         }
-
-        docx.Packer.toBlob(doc).then((blob) => {
-            saveAs(blob, file.name.replace(/\.[^/.]+$/, ".docx"));
-        });
-    } else {
-        alert('Please select a PDF file for conversion to DOCX.');
-    }
-}
-
-async function convertDocxToPdf() {
-    const fileInput = document.getElementById('docxInput');
-
-    if (fileInput.files.length === 0) {
-        alert('Please select a file first!');
-        return;
-    }
-
-    const file = fileInput.files[0];
-    if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        const arrayBuffer = await file.arrayBuffer();
-        const doc = await docx.Document.load(arrayBuffer);
-        const pdfDoc = await PDFLib.PDFDocument.create();
-
-        for (const section of doc.sections) {
-            for (const child of section.children) {
-                if (child instanceof docx.Paragraph) {
-                    const page = pdfDoc.addPage();
-                    page.drawText(child.text);
-                } else if (child instanceof docx.ImageRun) {
-                    const page = pdfDoc.addPage([child.width, child.height]);
-                    const pngImage = await pdfDoc.embedPng(child.data);
-                    page.drawImage(pngImage, { x: 0, y: 0, width: child.width, height: child.height });
-                }
-            }
+    })
+    .then(response => {
+        const data = response.data;
+        if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            const downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = data.fileUrl;
+            downloadLink.download = file.name.replace(/\.[^/.]+$/, '.' + targetFormat);
+            downloadLink.style.display = 'block';
+            downloadLink.textContent = 'Download ' + targetFormat.toUpperCase();
         }
-
-        const pdfBytes = await pdfDoc.save();
-        saveAs(new Blob([pdfBytes], { type: 'application/pdf' }), file.name.replace(/\.[^/.]+$/, ".pdf"));
-    } else {
-        alert('Please select a DOCX file for conversion to PDF.');
-    }
+    })
+    .catch(error => {
+        console.error('Error during conversion:', error);
+        alert('An error occurred during the conversion. Please try again.');
+    });
 }
