@@ -12,34 +12,66 @@
         <div class="buttons">
             <button onclick="showForm('pngToJpgForm')">PNG to JPG</button>
             <button onclick="showForm('jpgToPngForm')">JPG to PNG</button>
-            <button onclick="showForm('pdfToDocxForm')">PDF to DOCX</button>
-            <button onclick="showForm('docxToPdfForm')">DOCX to PDF</button>
+            <button onclick="showForm('bmpToPngForm')">BMP to PNG</button>
+            <button onclick="showForm('bmpToJpgForm')">BMP to JPG</button>
+            <button onclick="showForm('gifToPngForm')">GIF to PNG</button>
+            <button onclick="showForm('gifToJpgForm')">GIF to JPG</button>
+            <button onclick="showForm('csvToJsonForm')">CSV to JSON</button>
+            <button onclick="showForm('jsonToCsvForm')">JSON to CSV</button>
+            <button onclick="showForm('wavToMp3Form')">WAV to MP3</button>
         </div>
 
         <div id="pngToJpgForm" class="form" style="display: none;">
             <input type="file" id="pngInput" accept=".png">
-            <button onclick="uploadAndConvert('pngInput', 'jpg')">Convert to JPG</button>
+            <button onclick="convertPngToJpg()">Convert to JPG</button>
         </div>
 
         <div id="jpgToPngForm" class="form" style="display: none;">
             <input type="file" id="jpgInput" accept=".jpg, .jpeg">
-            <button onclick="uploadAndConvert('jpgInput', 'png')">Convert to PNG</button>
+            <button onclick="convertJpgToPng()">Convert to PNG</button>
         </div>
 
-        <div id="pdfToDocxForm" class="form" style="display: none;">
-            <input type="file" id="pdfInput" accept=".pdf">
-            <button onclick="uploadAndConvert('pdfInput', 'docx')">Convert to DOCX</button>
+        <div id="bmpToPngForm" class="form" style="display: none;">
+            <input type="file" id="bmpInput" accept=".bmp">
+            <button onclick="convertBmpToPng()">Convert to PNG</button>
         </div>
 
-        <div id="docxToPdfForm" class="form" style="display: none;">
-            <input type="file" id="docxInput" accept=".docx">
-            <button onclick="uploadAndConvert('docxInput', 'pdf')">Convert to PDF</button>
+        <div id="bmpToJpgForm" class="form" style="display: none;">
+            <input type="file" id="bmpInputJpg" accept=".bmp">
+            <button onclick="convertBmpToJpg()">Convert to JPG</button>
         </div>
 
+        <div id="gifToPngForm" class="form" style="display: none;">
+            <input type="file" id="gifInput" accept=".gif">
+            <button onclick="convertGifToPng()">Convert to PNG</button>
+        </div>
+
+        <div id="gifToJpgForm" class="form" style="display: none;">
+            <input type="file" id="gifInputJpg" accept=".gif">
+            <button onclick="convertGifToJpg()">Convert to JPG</button>
+        </div>
+
+        <div id="csvToJsonForm" class="form" style="display: none;">
+            <input type="file" id="csvInput" accept=".csv">
+            <button onclick="convertCsvToJson()">Convert to JSON</button>
+        </div>
+
+        <div id="jsonToCsvForm" class="form" style="display: none;">
+            <input type="file" id="jsonInput" accept=".json">
+            <button onclick="convertJsonToCsv()">Convert to CSV</button>
+        </div>
+        <div id="wavToMp3Form" class="form" style="display: none;">
+            <input type="file" id="wavInput" accept=".wav">
+            <button onclick="convertWavToMp3()">Convert to MP3</button>
+        </div>
         <a id="downloadLink" style="display: none;">Download</a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/libmp3lame-js/lame.min.js"></script>
+
     <script src="script.js"></script>
+    <div class="footer">
+        <p id="footertext">Copyright © 2024 Teymur Babayev</p>
+    </div>
 </body>
 </html>

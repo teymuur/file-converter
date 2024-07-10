@@ -5,7 +5,8 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background: url('bg-image.jpg');
+    background-size: contain;
 }
 
 .container {
@@ -14,6 +15,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    width:800px;
 }
 
 h1 {
@@ -32,6 +34,7 @@ button {
     font-size: 16px;
     border-radius: 10px;
     border: none;
+    cursor: pointer;
 }
 
 .form {
@@ -46,4 +49,13 @@ input[type="file"]::file-selector-button {
     font-size: 16px;
     border-radius: 10px;
     border: none;
+    cursor: pointer;
   }
+  .footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+}
